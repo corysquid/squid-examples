@@ -25,7 +25,7 @@ import nftContractAbi from '../abi/squidEasterEggNftAbi';
 // Function to get Squid SDK instance
 const getSDK = (): Squid => {
 	const squid = new Squid({
-		baseUrl: 'https://testnet.api.squidrouter.com',
+		baseUrl: 'https://api.squidrouter.com',
 		integratorId: integratorId,
 	});
 	return squid;
@@ -44,7 +44,7 @@ const getSDK = (): Squid => {
 
 	// Create contract interface and encode mint function for NFT on Polygon
 	const nftContractInterface = new ethers.utils.Interface(nftContractAbi);
-	const mintEncodedData = nftContractInterface.encodeFunctionData('mint', [signer.address]);
+	const mintEncodedData = nftContractInterface.encodeFunctionData('mint', []);
 
 	// Set up parameters for swapping tokens and minting NFT on Polygon
 	const params = {
@@ -65,6 +65,10 @@ const getSDK = (): Squid => {
 				target: nftContractAddress,
 				value: '0',
 				callData: mintEncodedData,
+				payload: {
+					tokenAddress: nativeToken,
+					inputPos: 1,
+				},
 				estimatedGas: '50000',
 			},
 		],

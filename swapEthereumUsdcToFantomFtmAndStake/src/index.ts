@@ -17,9 +17,8 @@ const fantomId = 250; // Fantom
 const nativeToken = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 const ethereumUsdc = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
 
-// Define amount to swap and ID of the validator to be staked
+// Define amount to swap and stake
 const amountToSwap = '10000000000000000';
-const validatorId = 1;
 
 // Import staking contract ABI
 import stakingContractAbi from '../abi/fantomSFC';
@@ -27,7 +26,7 @@ import stakingContractAbi from '../abi/fantomSFC';
 // Function to get Squid SDK instance
 const getSDK = (): Squid => {
 	const squid = new Squid({
-		baseUrl: 'https://testnet.api.squidrouter.com',
+		baseUrl: 'https://api.squidrouter.com',
 		integratorId: integratorId,
 	});
 	return squid;
@@ -46,7 +45,7 @@ const getSDK = (): Squid => {
 
 	// Create contract interface and encode delegate (Fantom staking) function
 	const stakingContractInterface = new ethers.utils.Interface(stakingContractAbi);
-	const delegateEncodedData = stakingContractInterface.encodeFunctionData('delegate', ['1', validatorId]);
+	const delegateEncodedData = stakingContractInterface.encodeFunctionData('delegate', [amountToSwap]);
 
 	// Set up parameters for swapping tokens and staking
 	const params = {

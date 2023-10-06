@@ -22,7 +22,7 @@ const amount = '10000000000000000';
 // Function to get Squid SDK instance
 const getSDK = (): Squid => {
 	const squid = new Squid({
-		baseUrl: 'https://testnet.api.squidrouter.com',
+		baseUrl: 'https://api.squidrouter.com',
 		integratorId: integratorId,
 	});
 	return squid;
