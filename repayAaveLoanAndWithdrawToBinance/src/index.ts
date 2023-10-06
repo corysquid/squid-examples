@@ -18,10 +18,10 @@ const binanceSmartChainId = 56; // Binance Smart Chain
 const nativeToken = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
 // Define asset, amount, interest rate mode, and address
-const repayAsset = ''; // The address of the borrowed underlying asset previously borrowed
+const repayAsset = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'; // The address of the borrowed underlying asset previously borrowed
 const repayAmount = '10000000000000000'; // The amount to repay - Send the value type(uint256).max in order to repay the whole debt for `asset` on the specific `debtMode`
 const repayInterestRateMode = 1; // The interest rate mode at of the debt the user wants to repay: 1 for Stable, 2 for Variable
-const repayOnBehalfOf = ''; // The address of the user who will get his debt reduced/removed. Should be the address of the user calling the function if he wants to reduce/remove his own debt, or the address of any other other borrower whose debt should be removed
+const repayOnBehalfOf = '0x0000000000000000000000000000000000000000'; // The address of the user who will get his debt reduced/removed. Should be the address of the user calling the function if he wants to reduce/remove his own debt, or the address of any other other borrower whose debt should be removed
 
 // Import Aave lending pool ABI
 import aavePoolAbi from '../abi/aavePoolAbi';
@@ -29,7 +29,7 @@ import aavePoolAbi from '../abi/aavePoolAbi';
 // Function to get Squid SDK instance
 const getSDK = (): Squid => {
 	const squid = new Squid({
-		baseUrl: 'https://testnet.api.squidrouter.com',
+		baseUrl: 'https://api.squidrouter.com',
 		integratorId: integratorId,
 	});
 	return squid;
@@ -75,6 +75,10 @@ const getSDK = (): Squid => {
 				value: '0',
 				callData: repayEncodedData,
 				estimatedGas: '50000',
+				payload: {
+					tokenAddress: repayAsset,
+					inputPos: 1,
+				},
 			},
 		],
 	};
