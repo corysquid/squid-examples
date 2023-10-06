@@ -98,4 +98,18 @@ const getSDK = (): Squid => {
 	console.log(
 		`Track status via API call: https://api.squidrouter.com/v1/status?transactionId=${txReceipt.transactionHash}`
 	);
+
+	// Wait a few seconds before checking the status
+	await new Promise((resolve) => setTimeout(resolve, 5000));
+
+	// Retrieve the transaction's route status
+	const getStatusParams = {
+		transactionId: txReceipt.transactionHash,
+		fromChainId: polygonId,
+		toChainId: arbitrumId,
+	};
+	const status = await squid.getStatus(getStatusParams);
+
+	// Display the route status
+	console.log(`Route status: ${JSON.stringify(status)}`);
 })();
