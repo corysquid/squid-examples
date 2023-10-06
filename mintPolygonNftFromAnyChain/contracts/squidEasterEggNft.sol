@@ -15,12 +15,12 @@ contract squidEasterEggNft is ERC721 {
         _baseTokenURI = baseTokenURI_;
     }
 
-    function mint() external {
-        require(!_minted[msg.sender], "You have already minted this NFT.");
-        _minted[msg.sender] = true;
+    function mint(address _receiver) external {
+        require(!_minted[_receiver], "You have already minted this NFT.");
+        _minted[_receiver] = true;
         _currentTokenId += 1;
         uint256 newItemId = _currentTokenId;
-        _safeMint(msg.sender, newItemId);
+        _safeMint(_receiver, newItemId);
     }
 
     function _baseURI() internal view override returns (string memory) {

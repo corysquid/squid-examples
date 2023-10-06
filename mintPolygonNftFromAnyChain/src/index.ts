@@ -44,7 +44,7 @@ const getSDK = (): Squid => {
 
 	// Create contract interface and encode mint function for NFT on Polygon
 	const nftContractInterface = new ethers.utils.Interface(nftContractAbi);
-	const mintEncodedData = nftContractInterface.encodeFunctionData('mint', []);
+	const mintEncodedData = nftContractInterface.encodeFunctionData('mint', [signer.address]);
 
 	// Set up parameters for swapping tokens and minting NFT on Polygon
 	const params = {

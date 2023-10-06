@@ -176,7 +176,13 @@ const squidEasterEggNftAbi = [
 		type: 'function',
 	},
 	{
-		inputs: [],
+		inputs: [
+			{
+				internalType: 'address',
+				name: '_receiver',
+				type: 'address',
+			},
+		],
 		name: 'mint',
 		outputs: [],
 		stateMutability: 'nonpayable',
