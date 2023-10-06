@@ -60,6 +60,10 @@ const mintEncodedData = nftContractInterface.encodeFunctionData('mint', []);
 				target: nftContractAddress,
 				value: '0',
 				callData: mintEncodedData,
+				payload: {
+					tokenAddress: nativeToken,
+					inputPos: 1,
+				},
 				estimatedGas: '50000',
 			},
 		],
