@@ -19,8 +19,9 @@ const nativeToken = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'; // Define depa
 // Define amount to be sent
 const amount = '10000000000000000';
 
-// Import NFT contract ABI
+// Import necessary ABI's
 import nftContractAbi from '../abi/squidEasterEggNftAbi';
+import erc20Abi from '../abi/erc20Abi';
 
 // Function to get Squid SDK instance
 const getSDK = (): Squid => {
@@ -42,9 +43,15 @@ const getSDK = (): Squid => {
 	await squid.init();
 	console.log('Initialized Squid SDK');
 
-	// Create contract interface and encode mint function for NFT on Polygon
+	// Create contract interfaces and encode calldata
 	const nftContractInterface = new ethers.utils.Interface(nftContractAbi);
 	const mintEncodedData = nftContractInterface.encodeFunctionData('mint', [signer.address]);
+
+	const erc20ContractInterface = new ethers.utils.Interface(erc20Abi);
+	const transferRemainingBalanceEncodeData = erc20ContractInterface.encodeFunctionData('transfer', [
+		signer.address,
+		'0',
+	]);
 
 	// Set up parameters for swapping tokens and minting NFT on Polygon
 	const params = {
@@ -68,6 +75,17 @@ const getSDK = (): Squid => {
 				target: nftContractAddress,
 				value: '0',
 				callData: mintEncodedData,
+				payload: {
+					tokenAddress: nativeToken,
+					inputPos: 1,
+				},
+				estimatedGas: '50000',
+			},
+			{
+				callType: 1, // SquidCallType.FULL_TOKEN_BALANCE
+				target: nativeToken,
+				value: '0',
+				callData: transferRemainingBalanceEncodeData,
 				payload: {
 					tokenAddress: nativeToken,
 					inputPos: 1,
