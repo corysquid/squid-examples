@@ -44,9 +44,33 @@ const getRoute = async (params: any) => {
 				'Content-Type': 'application/json',
 			},
 		});
-		return result.data;
+		const requestId = result.headers['x-request-id'];
+		return { data: result.data, requestId: requestId };
 	} catch (error) {
 		// Log the error response if it's available.
+		if (error.response) {
+			console.error('API error:', error.response.data);
+		}
+		console.error('Error with parameters:', params);
+		throw error;
+	}
+};
+
+const getStatus = async (params: any) => {
+	try {
+		const result = await axios.get('https://api.squidrouter.com/v1/status', {
+			params: {
+				transactionId: params.transactionId,
+				requestId: params.requestId,
+				fromChainId: params.fromChainId,
+				toChainId: params.toChainId,
+			},
+			headers: {
+				'x-integrator-id': integratorId,
+			},
+		});
+		return result.data;
+	} catch (error) {
 		if (error.response) {
 			console.error('API error:', error.response.data);
 		}
@@ -89,9 +113,12 @@ const getRoute = async (params: any) => {
 
 	console.log('Parameters:', params);
 
-	// Get the swap route using API
-	const route = (await getRoute(params)).route;
-	console.log('Calculated route:', route.estimate.toAmount);
+	// Get the swap route using Squid API
+	const routeResult = await getRoute(params);
+	const route = routeResult.data.route;
+	const requestId = routeResult.requestId;
+	console.log('Calculated route:', route);
+	console.log('requestId:', requestId);
 
 	const transactionRequest = route.transactionRequest;
 
@@ -112,4 +139,19 @@ const getRoute = async (params: any) => {
 	console.log(
 		`Track status via API call: https://api.squidrouter.com/v1/status?transactionId=${txReceipt.transactionHash}`
 	);
+
+	// Wait a few seconds before checking the status
+	await new Promise((resolve) => setTimeout(resolve, 5000));
+
+	// Retrieve the transaction's route status
+	const getStatusParams = {
+		transactionId: txReceipt.transactionHash,
+		requestId: requestId,
+		fromChainId: polygonId,
+		toChainId: arbitrumId,
+	};
+	const status = await getStatus(getStatusParams);
+
+	// Display the route status
+	console.log(`Route status: ${JSON.stringify(status)}`);
 })();
