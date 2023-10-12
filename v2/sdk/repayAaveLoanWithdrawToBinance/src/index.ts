@@ -89,7 +89,7 @@ const getSDK = (): Squid => {
 	console.log('Parameters:', params);
 
 	// Get the swap route using Squid SDK
-	const { route } = await squid.getRoute(params);
+	const { route, requestId } = await squid.getRoute(params);
 	console.log('Calculated route: ', route.estimate.toAmount);
 	console.log('Calculated fee costs: ', route.estimate.feeCosts);
 
@@ -112,6 +112,7 @@ const getSDK = (): Squid => {
 	// Retrieve the transaction's route status
 	const getStatusParams = {
 		transactionId: txReceipt.transactionHash,
+		requestId: requestId,
 		fromChainId: ethereumId,
 		toChainId: binanceSmartChainId,
 	};
